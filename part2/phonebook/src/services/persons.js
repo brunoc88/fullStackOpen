@@ -13,4 +13,8 @@ export const deletePerson = (id) => {
     return axios.delete(`${urlBase}/${id}`).then(response => response.data);
 }
 
+export const updatePhoneNumber = (id, updatedPerson) => {
+    return axios.put(`${urlBase}/${id}`, updatedPerson).then(response => response.data);
+}
+
 

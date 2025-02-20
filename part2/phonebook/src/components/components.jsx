@@ -29,4 +29,24 @@ const Filter = ({changeFilter}) =>{
        <div>filter shown with <input onChange={changeFilter}/></div>
     )
 }
-export { Persons, PersonForm, Filter };
+
+const Notification = ({ message, errorMessage }) => {
+    if (!message && !errorMessage) {
+        return null;
+    }
+    
+    if(errorMessage){
+        return(
+            <div className="error">
+                {errorMessage}
+            </div>
+        )
+    }
+
+    return (
+      <div className="success">
+        {message}
+      </div>
+    )
+}
+export { Persons, PersonForm, Filter, Notification };
