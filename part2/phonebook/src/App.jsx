@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Persons, PersonForm, Filter } from './components/components'
-import axios from 'axios';
+import {getAll, create, deletePerson} from './services/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -9,12 +10,11 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(()=>{
-    axios.
-      get('http://localhost:3001/persons')
-      .then(response=>{
-        setPersons(response.data);
-        console.log('promise fulfilled')
-      })
+    getAll()
+    .then(prev => setPersons(prev))
+    .catch(e=>{
+      console.log(e);
+    })
   },[])
 
 
@@ -58,15 +58,31 @@ const App = () => {
     }
     const newPerson = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
+      number: newNumber
     }
-    setPersons(persons.concat(newPerson));
-    setNewName('');
-    setNewNumber('');
+
+    create(newPerson)
+    .then(prev =>{
+      setPersons(persons.concat(prev));
+      setNewName('');
+      setNewNumber('');
+    })
+
   }
 
-
+  const destroyPerson = (id, name) => {
+    console.log('id en funcion:',id);
+    const msj = `Delete ${name}?`;
+    if(window.confirm(msj)){
+        deletePerson(id)
+        .then(() => {
+            setPersons(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+            console.error("Error deleting person:", error);
+        });
+    }
+}
 
   return (
     <div>
@@ -78,9 +94,9 @@ const App = () => {
 
       <PersonForm changeName={handleNameChange} changeNumber={handleNumberChange}
         addPerson={addName} newName={newName}
-        newNumber={newNumber} />
+        newNumber={newNumber}/>
       <h3>Numbers</h3>
-      <Persons personFilter={filteredPersons} />
+      <Persons personFilter={filteredPersons} click={destroyPerson}/>
     </div>
   )
 }
