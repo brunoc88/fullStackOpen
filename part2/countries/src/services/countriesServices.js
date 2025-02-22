@@ -5,4 +5,8 @@ const getAll = () =>{
     return axios.get(urlBase).then(response => response.data);
 }
 
-export {getAll};
+const getWeather = () =>{
+    return axios.get().then(response => response.data);
+}
+
+export {getAll, getWeather};
