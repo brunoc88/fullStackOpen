@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 
-app.use(express.static('dist'));  // 🔥 Esto debe ir antes de las rutas API
+app.use(express.static('dist')); 
 app.use(cors());
 app.use(express.json());
 app.use(morgan('tiny'));
@@ -121,9 +121,6 @@ app.post('/api/persons', (req, res) => {
   return res.status(201).json(person);
 });
 
-app.get('*', (req, res) => {
-  res.sendFile('index.html', { root: 'dist' });
-});
 
 
 
