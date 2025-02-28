@@ -3,10 +3,11 @@ const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 
-app.use(cors()); //3.9
+app.use(express.static('dist'));  // 🔥 Esto debe ir antes de las rutas API
+app.use(cors());
 app.use(express.json());
+app.use(morgan('tiny'));
 
-app.use(morgan('tiny'));//3.7
 
 
 //3.8
@@ -118,6 +119,10 @@ app.post('/api/persons', (req, res) => {
   persons = persons.concat(person);
 
   return res.status(201).json(person);
+});
+
+app.get('*', (req, res) => {
+  res.sendFile('index.html', { root: 'dist' });
 });
 
 

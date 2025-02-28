@@ -1,5 +1,6 @@
 import axios from 'axios'
-const urlBase = 'http://localhost:3001/persons'
+//const urlBase = 'http://localhost:3001/persons' we not goint to use it anymore, because we need the new one for part3
+const urlBase = 'api/persons'
 
 export const getAll = () =>{
     return axios.get(urlBase).then(response => response.data);

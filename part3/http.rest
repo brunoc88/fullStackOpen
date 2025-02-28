@@ -12,3 +12,7 @@ GET http://localhost:3001/api/persons
 
 ###
 DELETE http://localhost:3001/api/persons/911234
+
+//3.10
+###
+GET https://render-part3-m603.onrender.com/api/persons
