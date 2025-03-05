@@ -11,7 +11,23 @@ Content-Type: application/json
 GET http://localhost:3001/api/persons
 
 ###
-DELETE http://localhost:3001/api/persons/911234
+GET http://localhost:3001/info
+
+###
+GET http://localhost:3001/api/persons/67c7ba5e77d9bd647386bfcc
+
+###
+DELETE http://localhost:3001/api/persons/67c84a3bb7a0314292d23095
+
+###
+PUT http://localhost:3001/api/persons/67c7c42ec6bc3146b19f6ad1
+Content-Type: application/json
+
+{
+  "name": "Bruno Cerutti",
+  "number": "987654"
+}
+
 
 //3.10
 ###
