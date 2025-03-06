@@ -24,17 +24,17 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 
 
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then(person => {
       res.json(person);
     })
-    .catch(err => {
-      console.log(err);
+    .catch(error => {
+      next.log(error);
     })
 })
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
   Person.find({})
     .then(persons => {
       const infoPersons = persons.length;
@@ -42,10 +42,11 @@ app.get('/info', (req, res) => {
       res.send(`<p>Phonebook has info for ${infoPersons} people</p>
       <p>${date}</p>`)
     })
+    .catch(error => next(error));
 })
 
 
-app.get('/api/persons/:id',(req,res)=>{
+app.get('/api/persons/:id',(req,res,next)=>{
   const id = req.params.id;
   Person.findById(id)
   .then(person=>{
@@ -55,23 +56,17 @@ app.get('/api/persons/:id',(req,res)=>{
       res.status(404).end();
     }
   })
-  .catch(err=>console.log(err));
+  .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res,next) => {
   const id = req.params.id;
 
   Person.findByIdAndDelete(id)
-    .then(person => {
-      if (!person) {
-        return res.status(404).json({ error: "Person not found" });
-      }
+    .then(result => {
       res.status(204).end(); 
     })
-    .catch(error => {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
-    });
+    .catch(error => next(error));
 });
 
 app.post('/api/persons',(req,res)=>{
@@ -95,7 +90,7 @@ app.post('/api/persons',(req,res)=>{
 })
 
 
-app.put('/api/persons/:id', (req, res) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
   const { name, number } = req.body;
 
@@ -105,17 +100,29 @@ app.put('/api/persons/:id', (req, res) => {
     { new: true, runValidators: true } 
   )
   .then(updatedPerson => {
-    if (!updatedPerson) {
-      return res.status(404).json({ error: "Person not found" });
-    }
     res.json(updatedPerson);
   })
-  .catch(error => {
-    console.error(error);
-    res.status(400).json({ error: "Invalid ID format or bad request" });
-  });
+  .catch(error => next(error));
 });
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

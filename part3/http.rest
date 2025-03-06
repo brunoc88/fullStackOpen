@@ -20,11 +20,11 @@ GET http://localhost:3001/api/persons/67c7ba5e77d9bd647386bfcc
 DELETE http://localhost:3001/api/persons/67c84a3bb7a0314292d23095
 
 ###
-PUT http://localhost:3001/api/persons/67c7c42ec6bc3146b19f6ad1
+PUT http://localhost:3001/api/persons/67c99db8e625964292e23178
 Content-Type: application/json
 
 {
-  "name": "Bruno Cerutti",
+  "name": "Bruno",
   "number": "987654"
 }
 
