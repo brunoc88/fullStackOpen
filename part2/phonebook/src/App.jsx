@@ -109,7 +109,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null);
         }, 2000);
-      })
+      });      
   }
 
   const destroyPerson = (id, name) => {
