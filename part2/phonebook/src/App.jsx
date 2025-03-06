@@ -101,14 +101,14 @@ const App = () => {
         setSuccesMessage(`Added ${prev.name}`);
         setTimeout(() => {
           setSuccesMessage(null);
-        }, 2000);
+        }, 5000);
       })
       .catch(error => {
         console.error(error);
         setErrorMessage(`Failed to add ${newPerson.name}`);
         setTimeout(() => {
           setErrorMessage(null);
-        }, 2000);
+        }, 5000);
       });      
   }
 
