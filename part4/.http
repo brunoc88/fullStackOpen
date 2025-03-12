@@ -1,0 +1,12 @@
+POST http://localhost:3000/api/blogs
+Content-Type: application/json
+
+{
+    "title": "testing back",
+    "author": "fullStackOpen",
+    "url": "fullstackopen.com/part4",
+    "likes": 3000
+}
+
+###
+GET http://localhost:3000/api/blogs
