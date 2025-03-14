@@ -4,7 +4,11 @@ const blogSchema = new mongoose.Schema({
   title: { type: String, required: true },
   author: String,
   url: { type: String, required: true },
-  likes: { type: Number, default: 0 } // this is if we miss likes property
+  likes: { type: Number, default: 0 }, // this is if we miss likes property
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 
