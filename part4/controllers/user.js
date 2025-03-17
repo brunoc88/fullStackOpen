@@ -1,25 +1,35 @@
-const usersRouter = require('express').Router();
-const User = require('../models/user');
-const bcrypt = require('bcrypt');
+const usersRouter = require('express').Router()
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 usersRouter.post('/', async (req, res, next) => {
-    const { username, name, password } = req.body;
+  const { username, name, password } = req.body
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
-    const user = new User({
-        username,
-        name,
-        passwordHash,
-    })
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Content missing' })
+  }
 
-    const savedUser = await user.save()
+  if (username.length < 3 || password.length < 3) {
+    return res.status(400).json({ error: 'Username and password must be at least 3 characters long' })
+  }
 
-    return res.status(201).json(savedUser)
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+  const user = new User({
+    username,
+    name,
+    passwordHash
+  })
+
+  const savedUser = await user.save()
+
+  return res.status(201).json(savedUser)
 })
 
-usersRouter.get('/', async(req,res,next) =>{
-    const users = await User.find({});
-    return res.status(200).json(users);
+usersRouter.get('/', async (request, response) => {
+  const users = await User
+    .find({}).populate('blogs', { url: 1, title: 1, author: 1, id: 1 })
+
+  response.json(users)
 })
-module.exports = usersRouter;
+module.exports = usersRouter

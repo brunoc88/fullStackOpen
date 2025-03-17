@@ -9,8 +9,7 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }
-});
-
+})
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
@@ -22,4 +21,4 @@ blogSchema.set('toJSON', {
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-module.exports = Blog;
+module.exports = Blog

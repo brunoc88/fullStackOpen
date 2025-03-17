@@ -1,9 +1,10 @@
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const supertest = require('supertest')
-const app = require('../app');
-const helper = require('../tests/test_helper');
-const api = supertest(app);
+const app = require('../app')
+const helper = require('../tests/test_helper')
+const api = supertest(app)
 
 describe('when there is initially one user in db', () => {
   beforeEach(async () => {
@@ -21,7 +22,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'mluukkai',
       name: 'Matti Luukkainen',
-      password: 'salainen',
+      password: 'salainen'
     }
 
     await api
@@ -31,10 +32,10 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
-    //assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+    // assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
     const usernames = usersAtEnd.map(u => u.username)
-    //assert(usernames.includes(newUser.username))
+    // assert(usernames.includes(newUser.username))
     expect(usernames).toContain(newUser.username)
   })
 
@@ -44,7 +45,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'root',
       name: 'Superuser',
-      password: 'salainen',
+      password: 'salainen'
     }
 
     const result = await api
@@ -54,7 +55,51 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
-    expect(result.body.error).toContain('expected `username` to be unique');
-    expect(usersAtEnd.length).toBe(usersAtStart.length);
+    expect(result.body.error).toContain('expected `username` to be unique')
+    expect(usersAtEnd.length).toBe(usersAtStart.length)
+  })
+
+  test('creation fails when the length of the username or password are not valided', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: 'john',
+      password: '12',
+      username: 'jo'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(result.body.error).toContain('Username and password must be at least 3 characters long')
+    expect(usersAtEnd.length).toBe(usersAtStart.length)
+  })
+
+  test('creation fails when username or password are empty', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      name: 'john',
+      password: '',
+      username: ''
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(result.body.error).toContain('Content missing')
+    expect(usersAtEnd.length).toBe(usersAtStart.length)
+  })
+
+  afterAll(async () => {
+    await mongoose.connection.close()
   })
 })
