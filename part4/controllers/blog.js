@@ -4,14 +4,6 @@ const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../utils/config')
 
-// Función para obtener el token del header
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
 
 // Obtener todos los blogs
 blogRouter.get('/', async (req, res) => {
@@ -23,11 +15,8 @@ blogRouter.get('/', async (req, res) => {
 blogRouter.post('/', async (request, response) => {
   const { title, author, url, likes } = request.body
   
+  let decodedToken = jwt.verify(request.token, SECRET)
   
-  
-  let decodedToken = jwt.verify(getTokenFrom(request), SECRET)
-  
-
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'Token invalid' })
   }
