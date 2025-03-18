@@ -1,13 +1,12 @@
-POST http://localhost:3000/api/blogs
-Content-Type: application/json
-
-{
-    "title": "react for rookies",
-    "author": "fullStackOpen",
-    "url": "fullstackopen.com/part4",
-    "likes": 51000,
-    "user": "67d88ea7c0f0380a6fda56ec"
-}
+GET http://localhost:3000/api/blogs
 
 ###
-GET http://localhost:3000/api/blogs
+POST http://localhost:3000/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJydW5vODgiLCJpZCI6IjY3ZDg1NDAwZWJlMzcxM2JhZjkyMjUzNSIsImlhdCI6MTc0MjMxMzU3Mn0.mvOOzNHl9hoDwZLcKVKPMlrn02FzBNs95n2wmMuEel8
+{
+    "title": "Testing from Rest Client",
+    "author": "VS Code",
+    "url": "restclient.com",
+    "likes": 12345
+}
