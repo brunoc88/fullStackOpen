@@ -1,8 +1,10 @@
 GET http://localhost:3000/api/blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJydW5vODgiLCJpZCI6IjY3ZDg1NDAwZWJlMzcxM2JhZjkyMjUzNSIsImlhdCI6MTc0MjM4Njk1NCwiZXhwIjoxNzQyMzkwNTU0fQ.cGib7JkEWLz6ypR68BxjedftnjC8JcJuoOON-DuQfx4
 
 ###
 POST http://localhost:3000/api/blogs
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh4eHgiLCJpZCI6IjY3ZDg4ZWE3YzBmMDM4MGE2ZmRhNTZlYyIsImlhdCI6MTc0MjMxOTMxOCwiZXhwIjoxNzQyMzIyOTE4fQ.cHcgHm1SYcK1MqWzi-8_aujXMJmIi-kbwYZV-zz4n2w
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh4eHgiLCJpZCI6IjY3ZDg4ZWE3YzBmMDM4MGE2ZmRhNTZlYyIsImlhdCI6MTc0MjMxOTMxOCwiZXhwIjoxNzQyMzIyOTE4fQ.cHcgHm1SYcK1MqWzi-8_aujXMJmIi-kbwYZV-zz4n2w
 {
     "title": "Use middleware",
     "author": "VS Code",
@@ -12,4 +14,4 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh4e
 
 ###
 DELETE http://localhost:3000/api/blogs/67d99983da344aee8336b8c1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inh4eHgiLCJpZCI6IjY3ZDg4ZWE3YzBmMDM4MGE2ZmRhNTZlYyIsImlhdCI6MTc0MjMxOTMxOCwiZXhwIjoxNzQyMzIyOTE4fQ.cHcgHm1SYcK1MqWzi-8_aujXMJmIi-kbwYZV-zz4n2w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJydW5vODgiLCJpZCI6IjY3ZDg1NDAwZWJlMzcxM2JhZjkyMjUzNSIsImlhdCI6MTc0MjM4NzE0OH0.JYz4P_H2Pv1wlKvpuKB_cMQeLcZH2gUVeqN3gHx0gu8

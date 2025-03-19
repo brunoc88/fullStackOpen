@@ -1,30 +1,19 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-const { SECRET } = require('../utils/config')
+const { userExtractor } = require('../utils/middleware')
 
 
-// Obtener todos los blogs
 blogRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs)
 })
 
-// Crear un nuevo blog
-blogRouter.post('/', async (request, response) => {
+
+blogRouter.post('/', userExtractor, async (request, response) => {
   const { title, author, url, likes } = request.body
   
-  let decodedToken = jwt.verify(request.token, SECRET)
-  
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'Token invalid' })
-  }
-
-  const user = await User.findById(decodedToken.id)
-
-  if (!user) {
-    return response.status(401).json({ error: 'User not found' })
+  if (!request.user) {
+    return response.status(401).json({ error: 'User authentication failed' })
   }
 
   if (!title || !url) {
@@ -36,18 +25,18 @@ blogRouter.post('/', async (request, response) => {
     author,
     url,
     likes: likes || 0,
-    user: user._id
+    user: request.user._id
   })
 
   const savedBlog = await newBlog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)
-  await user.save()
+  request.user.blogs = request.user.blogs.concat(savedBlog._id)
+  await request.user.save()
 
   response.status(201).json(savedBlog)
 })
 
-// Eliminar un blog
-blogRouter.delete('/:id', async (req, res) => {
+/*
+blogRouter.delete('/:id', userExtractor, async (req, res) => {
   const id = req.params.id
   const blog = await Blog.findById(id)
 
@@ -56,25 +45,40 @@ blogRouter.delete('/:id', async (req, res) => {
     return res.status(404).json({ error: 'Not Found' })
   }
 
-  if (!req.token) {
-    return res.status(401).json({ error: 'Token missing' })
-  }
-
-  let decodedToken = jwt.verify(req.token, SECRET)
   
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'Token invalid' })
-  }
-
-  if(!(blog.user._id.toString() === decodedToken.id)){
-    return res.status(401).json({error: 'Not authorized to delete this blog!'})
+  if (blog.user.toString() !== req.user.id) {
+    return res.status(403).json({ error: 'Not authorized to delete this blog' })
   }
   
   await Blog.findByIdAndDelete(id)
   res.status(204).end()
+})*/
+blogRouter.delete('/:id', userExtractor, async (req, res) => {
+  try {
+    const id = req.params.id
+    const blog = await Blog.findById(id)
+    console.log("BLOG EN BACKEND", blog)
+    if (!blog) {
+      return res.status(404).json({ error: 'Blog not found' })
+    }
+
+    console.log('Blog user:', blog.user.toString())
+    console.log('Request user:', req.user.id)
+
+    if (blog.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Not authorized to delete this blog' })
+    }
+
+    await Blog.findByIdAndDelete(id)
+    res.status(204).end()
+  } catch (error) {
+    console.error('Error deleting blog:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
 })
 
-// Actualizar un blog
+
+
 blogRouter.put('/:id', async (req, res) => {
   const id = req.params.id
   const body = req.body
