@@ -35,7 +35,7 @@ blogRouter.post('/', userExtractor, async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-/*
+
 blogRouter.delete('/:id', userExtractor, async (req, res) => {
   const id = req.params.id
   const blog = await Blog.findById(id)
@@ -52,29 +52,6 @@ blogRouter.delete('/:id', userExtractor, async (req, res) => {
   
   await Blog.findByIdAndDelete(id)
   res.status(204).end()
-})*/
-blogRouter.delete('/:id', userExtractor, async (req, res) => {
-  try {
-    const id = req.params.id
-    const blog = await Blog.findById(id)
-    console.log("BLOG EN BACKEND", blog)
-    if (!blog) {
-      return res.status(404).json({ error: 'Blog not found' })
-    }
-
-    console.log('Blog user:', blog.user.toString())
-    console.log('Request user:', req.user.id)
-
-    if (blog.user.toString() !== req.user.id) {
-      return res.status(403).json({ error: 'Not authorized to delete this blog' })
-    }
-
-    await Blog.findByIdAndDelete(id)
-    res.status(204).end()
-  } catch (error) {
-    console.error('Error deleting blog:', error)
-    res.status(500).json({ error: 'Internal Server Error' })
-  }
 })
 
 
