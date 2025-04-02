@@ -14,7 +14,7 @@ const getAll = () => {
 }
 
 
-const create = async newObject => {
+const create = async (id, newObject) => {
   if (!token) {
     throw new Error("No token found, please log in first");
   }
@@ -24,7 +24,7 @@ const create = async newObject => {
   };
 
   try {
-    const response = await axios.post(baseUrl, newObject, config);
+    const response = await axios.post(`${baseUrl}/${id}`, newObject, config);
     return response.data;
   } catch (error) {
     console.error("Error creating blog:", error.response?.data || error.message);
@@ -33,4 +33,25 @@ const create = async newObject => {
 };
 
 
-export default { getAll, create, setToken }
+const update = async (id, updateObject) => {  
+  if (!token) {
+    throw new Error("No token found, please log in first");
+  }
+
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, updateObject, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating blog:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+
+export default { getAll, create, setToken, update }
