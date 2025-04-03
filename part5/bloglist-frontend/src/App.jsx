@@ -67,6 +67,11 @@ const App = () => {
     setBlogs(blogs.map(blog => (blog.id === updatedBlog.id ? updatedBlog : blog)));
   };
 
+  const updateBlogListAfterDelete = (deletedId) => {
+    setBlogs(prevBlogs => prevBlogs.filter(b => b.id !== deletedId));
+  };
+  
+
   return (
     <div>
       {user === null ? (
@@ -92,7 +97,7 @@ const App = () => {
             <BlogForm onCreateBlog={addBlog} />
           </Toggable>
 
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} updateBlogListAfterDelete = {updateBlogListAfterDelete}/>)}
         </div>
       )}
     </div>

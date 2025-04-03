@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
+const mongoose = require('mongoose');
 const { userExtractor } = require('../utils/middleware')
 
 
@@ -54,23 +55,6 @@ blogRouter.delete('/:id', userExtractor, async (req, res) => {
   res.status(204).end()
 })
 
-
-/*
-blogRouter.put('/:id', async (req, res) => {
-  const id = req.params.id
-  const body = req.body
-
-  const findBlog = await Blog.findById(id)
-  if (!findBlog) {
-    return res.status(404).json({ error: 'Blog not found' })
-  }
-
-  const response = await Blog.findByIdAndUpdate(id, body, { new: true, runValidators: true })
-  res.status(200).json(response)
-})
-*/
-
-const mongoose = require('mongoose');
 
 blogRouter.put('/:id', async (req, res) => {
   const id = req.params.id;

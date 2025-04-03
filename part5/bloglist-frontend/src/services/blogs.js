@@ -52,6 +52,22 @@ const update = async (id, updateObject) => {
 };
 
 
+const deleteBlog = async (id) =>{
+  if (!token) {
+    throw new Error("No token found, please log in first");
+  }
 
+  const config = {
+    headers: { Authorization: token },
+  };
 
-export default { getAll, create, setToken, update }
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting blog:", error.response?.data || error.message);
+    throw error;
+  }
+}
+
+export default { getAll, create, setToken, update, deleteBlog }
