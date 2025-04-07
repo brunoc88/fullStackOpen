@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog, updateBlog, updateBlogListAfterDelete }) => {
+const Blog = ({ blog, updateBlog, updateBlogListAfterDelete, user }) => {
   const [visible, setVisible] = useState(false);
 
 
@@ -21,9 +21,9 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete }) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id 
+      user: blog.user.id
     };
-  
+
     try {
       const updated = await blogService.update(blog.id, updatedBlog);
       updateBlog({ ...updated, user: blog.user });
@@ -31,9 +31,9 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete }) => {
       console.error("Error updating blog:", error.response?.data || error.message);
     }
   };
-  
-  
-  
+
+
+
   const handleDelete = async (blogToDelete) => {
     const message = `Remove blog ${blogToDelete.title} by ${blogToDelete.author}`;
     if (window.confirm(message)) {
@@ -45,11 +45,11 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete }) => {
       }
     }
   };
-  
+
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author} 
+        {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
       </div>
       {visible && (
@@ -57,7 +57,11 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete }) => {
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.user.name}</p>
-          <button onClick={()=>handleDelete(blog)}>remove</button>
+          <div>
+            {user.username === (blog.user.username || blog.user.name) && (
+              <button onClick={() => handleDelete(blog)}>remove</button>
+            )}
+          </div>
         </div>
       )}
     </div>

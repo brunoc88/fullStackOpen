@@ -46,6 +46,7 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
+      console.log(exception)
       setErrorMessage('Wrong credentials');
       setTimeout(() => setErrorMessage(null), 5000);
     }
@@ -58,6 +59,7 @@ const App = () => {
       setSuccessMessage(`A new blog "${blogData.title}" by ${blogData.author} added`);
       setTimeout(() => setSuccessMessage(null), 5000);
     } catch (error) {
+      console.log(error)
       setErrorMessage('Failed to add blog');
       setTimeout(() => setErrorMessage(null), 5000);
     }
@@ -97,7 +99,7 @@ const App = () => {
             <BlogForm onCreateBlog={addBlog} />
           </Toggable>
 
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} updateBlogListAfterDelete = {updateBlogListAfterDelete}/>)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} updateBlogListAfterDelete = {updateBlogListAfterDelete} user={user}/>)}
         </div>
       )}
     </div>
