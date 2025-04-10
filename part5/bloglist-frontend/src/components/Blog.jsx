@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog, updateBlog, updateBlogListAfterDelete, user }) => {
+const Blog = ({ blog,handleLike, updateBlogListAfterDelete, user }) => {
   const [visible, setVisible] = useState(false);
 
 
@@ -17,21 +17,7 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete, user }) => {
     marginBottom: 5
   };
 
-  const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id
-    };
-
-    try {
-      const updated = await blogService.update(blog.id, updatedBlog);
-      updateBlog({ ...updated, user: blog.user });
-    } catch (error) {
-      console.error("Error updating blog:", error.response?.data || error.message);
-    }
-  };
-
+  
 
 
   const handleDelete = async (blogToDelete) => {
@@ -48,12 +34,12 @@ const Blog = ({ blog, updateBlog, updateBlogListAfterDelete, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog-summary">
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
       </div>
       {visible && (
-        <div>
+        <div className="blog-details">
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLike}>like</button></p>
           <p>{blog.user.name}</p>

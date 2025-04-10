@@ -19,7 +19,7 @@ const App = () => {
       setBlogs(blogs.sort((a, b) => b.likes - a.likes));
     });
   }, []);
-  
+
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggerBlogAppUser');
@@ -72,7 +72,22 @@ const App = () => {
   const updateBlogListAfterDelete = (deletedId) => {
     setBlogs(prevBlogs => prevBlogs.filter(b => b.id !== deletedId));
   };
-  
+
+  const handleLike = async (blogToLike) => {
+    const updatedBlog = {
+      ...blogToLike,
+      likes: blogToLike.likes + 1,
+      user: blogToLike.user.id // importante para que la API lo acepte
+    };
+
+    try {
+      const updated = await blogService.update(blogToLike.id, updatedBlog);
+      updateBlog({ ...updated, user: blogToLike.user });
+    } catch (error) {
+      console.error("Error updating blog:", error.response?.data || error.message);
+    }
+  };
+
 
   return (
     <div>
@@ -99,7 +114,17 @@ const App = () => {
             <BlogForm onCreateBlog={addBlog} />
           </Toggable>
 
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} updateBlogListAfterDelete = {updateBlogListAfterDelete} user={user}/>)}
+          {blogs.map(blog => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              handleLike={handleLike}
+              updateBlog={updateBlog}
+              updateBlogListAfterDelete={updateBlogListAfterDelete}
+            />
+          ))}
+
         </div>
       )}
     </div>

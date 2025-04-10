@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import vitestGlobals from 'eslint-plugin-vitest-globals'
 
 export default [
   { ignores: ['dist'] },
@@ -29,5 +30,12 @@ export default [
         { allowConstantExport: true },
       ],
     },
+  },
+  {
+    files: ['**/*.test.{js,jsx}'], 
+    plugins: {
+      'vitest-globals': vitestGlobals,
+    },
+    extends: ['plugin:vitest-globals/recommended'],
   },
 ]
